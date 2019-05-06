@@ -1,0 +1,43 @@
+---
+title: "Wine Reviews"
+author: "ODONNELL"
+date: "May 5, 2019"
+output: html_document
+---
+
+## Insert the wine reviews!
+```{r}
+#First, import needed libraries
+library(readr)
+library(tidyr)
+library(dplyr)
+#library(stringr)
+library(ggplot2)
+
+wine.reviews <- read_csv("winemag-data.csv")
+head(wine.reviews)
+```
+
+### Now to cut out some of the columns
+```{r}
+wine.reviews <- select(wine.reviews, -c(3, 7, 8,9, 10, 11))
+```
+
+### Finally, plotting the data!
+```{r}
+ggplot(wine.reviews, aes(x=price, y=points)) +
+  geom_point(shape=1) +
+  xlim(5, 100) +
+  ylim(75,100) +
+  geom_smooth(method=lm)
+```
+
+```{r}
+us.pnw.wines <- filter(wine.reviews, country == "US")
+us.pnw.wines <- filter(wine.reviews, province == c("Washington", "Oregon", "California"))
+
+ggplot(us.pnw.wines, aes(x=province, y=price)) +
+  geom_bar(stat = "summary", fun.y = "mean") +
+  ggtitle("Average Price by US PNW State")
+```
+
